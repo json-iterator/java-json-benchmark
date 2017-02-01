@@ -4,6 +4,7 @@ import com.github.fabienrenaud.jjb.data.gen.DataGenerator;
 import com.github.fabienrenaud.jjb.provider.JsonProvider;
 import com.github.fabienrenaud.jjb.stream.StreamDeserializer;
 import com.github.fabienrenaud.jjb.stream.StreamSerializer;
+import com.jsoniter.spi.TypeLiteral;
 import okio.*;
 
 import java.io.*;
@@ -115,6 +116,8 @@ public abstract class JsonSource<T> {
     abstract T[] newPojoArray(int quantity);
 
     public abstract Class<T> pojoType();
+
+    public abstract TypeLiteral<T> pojoTypeLiteral();
 
     private int index(final int bound) {
         return bound == 1 ? 0 : RNG.nextInt(bound);

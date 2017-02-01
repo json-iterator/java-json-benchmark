@@ -8,6 +8,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.module.afterburner.AfterburnerModule;
 import com.github.fabienrenaud.jjb.model.Users;
 import com.google.gson.Gson;
+import com.jsoniter.DecodingMode;
+import com.jsoniter.JsonIterator;
+import com.jsoniter.output.EncodingMode;
+import com.jsoniter.output.JsonStream;
 import com.owlike.genson.Genson;
 import com.squareup.moshi.Moshi;
 import flexjson.JSONDeserializer;
@@ -49,6 +53,8 @@ public class UsersJsonProvider implements JsonProvider<Users> {
         johnson = new org.apache.johnzon.mapper.MapperBuilder()
             .setAccessModeName("field") // default is "strict-method" which doesn't work nicely with public attributes
             .build();
+        JsonIterator.setMode(DecodingMode.DYNAMIC_MODE_AND_MATCH_FIELD_WITH_HASH);
+        JsonStream.setMode(EncodingMode.DYNAMIC_MODE);
     }
 
     @Override
@@ -119,6 +125,16 @@ public class UsersJsonProvider implements JsonProvider<Users> {
         return moshi;
     }
 
+    @Override
+    public JsonIterator jsonIterator() {
+        return JSON_ITERATOR.get();
+    }
+
+    @Override
+    public JsonStream jsonStream() {
+        return JSON_STREAM.get();
+    }
+
     private static final ThreadLocal<flexjson.JSONSerializer> FLEXJSON_SER = new ThreadLocal<flexjson.JSONSerializer>() {
         @Override
         protected JSONSerializer initialValue() {
@@ -137,6 +153,20 @@ public class UsersJsonProvider implements JsonProvider<Users> {
         @Override
         protected jodd.json.JsonSerializer initialValue() {
             return new jodd.json.JsonSerializer();
+        }
+    };
+
+    private static final ThreadLocal<JsonIterator> JSON_ITERATOR = new ThreadLocal<JsonIterator>() {
+        @Override
+        protected JsonIterator initialValue() {
+            return new JsonIterator();
+        }
+    };
+
+    private static final ThreadLocal<JsonStream> JSON_STREAM = new ThreadLocal<JsonStream>() {
+        @Override
+        protected JsonStream initialValue() {
+            return new JsonStream(null, 4096);
         }
     };
 }

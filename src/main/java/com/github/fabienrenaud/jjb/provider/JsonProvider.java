@@ -4,6 +4,8 @@ import com.dslplatform.json.DslJson;
 import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
+import com.jsoniter.JsonIterator;
+import com.jsoniter.output.JsonStream;
 import com.owlike.genson.Genson;
 import flexjson.JSONDeserializer;
 import flexjson.JSONSerializer;
@@ -43,4 +45,8 @@ public interface JsonProvider<T> {
     jodd.json.JsonSerializer joddSer();
 
     com.squareup.moshi.JsonAdapter<T> moshi();
+
+    JsonIterator jsonIterator();
+
+    JsonStream jsonStream();
 }

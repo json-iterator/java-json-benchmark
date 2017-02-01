@@ -2,6 +2,7 @@ package com.github.fabienrenaud.jjb.stream;
 
 import com.fasterxml.jackson.core.JsonParser;
 import com.google.gson.stream.JsonReader;
+import com.jsoniter.JsonIterator;
 import com.owlike.genson.stream.ObjectReader;
 
 import java.io.IOException;
@@ -16,4 +17,6 @@ public interface StreamDeserializer<T> {
     T gson(JsonReader reader) throws IOException;
 
     T jackson(JsonParser jParser) throws IOException;
+
+    T jsoniter(JsonIterator iter) throws IOException;
 }

@@ -6,11 +6,13 @@ import com.github.fabienrenaud.jjb.model.Users.User;
 import com.github.fabienrenaud.jjb.model.Users.Friend;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonToken;
+import com.jsoniter.JsonIterator;
 import com.owlike.genson.stream.ObjectReader;
 import com.owlike.genson.stream.ValueType;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by frenaud on 7/23/16.
@@ -455,5 +457,131 @@ public class UsersStreamDeserializer implements StreamDeserializer<Users> {
             }
         }
         return r;
+    }
+
+    @Override
+    public Users jsoniter(JsonIterator iter) throws IOException {
+        Users uc = new Users();
+        iter.readObjectCB((iter1, field, attachment) -> {
+            Users uc1 = (Users) attachment;
+            switch (field) {
+                case "users":
+                    uc1.users = new ArrayList<>();
+                    iter1.readArrayCB((iter2, attachment1) -> {
+                        List<User> users = (List<User>) attachment1;
+                        users.add(jsoniterUser(iter2));
+                        return true;
+                    }, uc1.users);
+                    break;
+                default:
+                    iter1.skip();
+            }
+            return true;
+        }, uc);
+        return uc;
+    }
+
+    private User jsoniterUser(JsonIterator iter) throws IOException {
+        User user = new User();
+        iter.readObjectCB((iter1, field, attachment) -> {
+            User user1 = (User) attachment;
+            switch (field) {
+                case "_id":
+                    user1._id = iter1.readString();
+                    break;
+                case "index":
+                    user1.index = iter1.readInt();
+                    break;
+                case "guid":
+                    user1.guid = iter1.readString();
+                    break;
+                case "isActive":
+                    user1.isActive = iter1.readBoolean();
+                    break;
+                case "balance":
+                    user1.balance = iter1.readString();
+                    break;
+                case "picture":
+                    user1.picture = iter1.readString();
+                    break;
+                case "age":
+                    user1.age = iter1.readInt();
+                    break;
+                case "eyeColor":
+                    user1.eyeColor = iter1.readString();
+                    break;
+                case "name":
+                    user1.name = iter1.readString();
+                    break;
+                case "gender":
+                    user1.gender = iter1.readString();
+                    break;
+                case "company":
+                    user1.company = iter1.readString();
+                    break;
+                case "email":
+                    user1.email = iter1.readString();
+                    break;
+                case "phone":
+                    user1.phone = iter1.readString();
+                    break;
+                case "address":
+                    user1.address = iter1.readString();
+                    break;
+                case "about":
+                    user1.about = iter1.readString();
+                    break;
+                case "registered":
+                    user1.registered = iter1.readString();
+                    break;
+                case "latitude":
+                    user1.latitude = iter1.readDouble();
+                    break;
+                case "longitude":
+                    user1.longitude = iter1.readDouble();
+                    break;
+                case "greeting":
+                    user1.greeting = iter1.readString();
+                    break;
+                case "favoriteFruit":
+                    user1.favoriteFruit = iter1.readString();
+                    break;
+                case "tags":
+                    user1.tags = new ArrayList<>();
+                    iter1.readArrayCB((iter2, attachment1) -> {
+                        List<String> tags = (List<String>) attachment1;
+                        tags.add(iter2.readString());
+                        return true;
+                    }, user1.tags);
+                    break;
+                case "friends":
+                    user1.friends = new ArrayList<>();
+                    iter1.readArrayCB((iter2, attachment12) -> {
+                        List<Friend> friends = (List<Friend>) attachment12;
+                        Friend friend = new Friend();
+                        iter2.readObjectCB((iter3, field1, attachment121) -> {
+                            Friend friend1 = (Friend) attachment121;
+                            switch (field1) {
+                                case "id":
+                                    friend1.id = iter3.readString();
+                                    break;
+                                case "name":
+                                    friend1.name = iter3.readString();
+                                    break;
+                                default:
+                                    iter3.skip();
+                            }
+                            return true;
+                        }, friend);
+                        friends.add(friend);
+                        return true;
+                    }, user1.friends);
+                    break;
+                default:
+                    iter1.skip();
+            }
+            return true;
+        }, user);
+        return user;
     }
 }

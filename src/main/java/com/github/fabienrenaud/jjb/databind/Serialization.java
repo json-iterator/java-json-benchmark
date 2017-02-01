@@ -5,6 +5,7 @@ import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.bluelinelabs.logansquare.LoganSquare;
 import com.github.fabienrenaud.jjb.JsonBench;
 import com.github.fabienrenaud.jjb.JsonUtils;
+import com.jsoniter.output.JsonStream;
 import okio.BufferedSink;
 import okio.Okio;
 import org.openjdk.jmh.annotations.Benchmark;
@@ -116,6 +117,14 @@ public class Serialization extends JsonBench {
         BufferedSink sink = Okio.buffer(Okio.sink(baos));
         JSON_SOURCE.provider().moshi().toJson(sink, JSON_SOURCE.nextPojo());
         sink.flush();
+        return baos;
+    }
+
+    @Benchmark
+    @Override
+    public Object jsoniter() throws Exception {
+        ByteArrayOutputStream baos = JsonUtils.byteArrayOutputStream();
+        JsonStream.serialize(JSON_SOURCE.nextPojo(), baos);
         return baos;
     }
 }

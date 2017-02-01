@@ -24,7 +24,8 @@ public enum Library {
     JSONSIMPLE,
     NANOJSON,
     JODD,
-    MOSHI;
+    MOSHI,
+    JSONITER;
 
     public static Set<Library> fromCsv(String str) {
         if (str == null || str.trim().isEmpty()) {
